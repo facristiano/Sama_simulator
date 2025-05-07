@@ -34,9 +34,9 @@ graph:
                             #    'distance' → Distance between the UE and its respective BS (Km)   #
                             #    'cap' → Capacity (Mbps)                                           #
                             #    'snr' → Signal-to-noise ratio (dB)                                #
-                            #    'avg_latency' → Average latency                                   #
-                            #    'user_time' → Time each UE was connected to its BS                #
-                            #    'user_bw' → Bandwidth used by each UE                             #
+                            #    'avg_latency' → Average latency (ms)                              #
+                            #    'user_time' → Time each UE was connected to its BS (ms)           #
+                            #    'user_bw' → Bandwidth used by each UE (ms)                        #
                             #    'deficit' →                                                       #
                             #    'norm_deficit' →                                                  #
                             #    'start_latency' -->                                               #
