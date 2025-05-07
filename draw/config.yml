@@ -1,64 +1,55 @@
-#############################################################     Instructions for Drawing Your Graph/Map     #######################################################################################################################
-
-#        1) Save the .pkl file in the folder where the draw.py code is located;
-#        2) Run the draw.py program and check on the screen the type of variation (BSs or UEs), the quantity of each, and the number of simulations;
-#        3) Modify the config.yml file with your desired settings;
-#        4) Press any key on the prompt screen to proceed with the program execution.
+#################################################   General Settings  ##################################################
 
 general:
-
-##########################################################################  General Settings  ########################################################################################################################################
-  
-  file: '/home/cristiano/PycharmProjects/Sama_simulator/output/04_15_25-19_00_41/04_15_25-19_00_41.pkl' # (name of the .pkl file)
+  file: '/home/cristiano/Downloads/08_08_2024-02_18_27.pkl' # (path of the .pkl file)
   make: 'graph' # 'map' --> draw map | 'graph' --> draw graph
   bs_ue_min: 1 # Minimum number of BSs or UEs
-  bs_ue_max: 9 # Maximum number of BSs or UEs (If empty, only the minimum value will be used)
-  bs_ue_step: 2 # Step size for BSs or UEs
-  s_min: 1 # Minimum simulation number
-  s_max: 60 # Maximum simulation number (If empty, only the minimum value will be used)
+  bs_ue_max: 5 # Maximum number of BSs or UEs (If empty, only the minimum value will be used)
+  bs_ue_step: 1 # Step size for BSs or UEs
+  s_min: 5 # Minimum simulation number
+  s_max: 40 # Maximum simulation number (If empty, only the minimum value will be used)
   s_step: 5 # Step size for the simulation
   type_link: 'downlink_data' #('downlink_data' or 'uplink_data')
 
-#########################################################################  End General Settings  ######################################################################################################################################
+#################################################  End General Settings  ###############################################
+
+####################################################  Graph Settings  ##################################################
+
 graph:
-
-############################################################################  Graph Settings  #########################################################################################################################################
-
-                                           
-############################  Glossary #################################
-#    'distance' → Distance between the UE and its respective BS        #
-#    'cap' → Capacity                                                  #                      
-#    'snr' → Signal-to-noise ratio                                     #                           
-#    'avg_latency' → Average latency                                   #                                                         
-#    'user_time' → Time each UE was connected to its BS                #                                                     
-#    'user_bw' → Bandwidth used by each UE                             #
-#    'deficit' →                                                       #
-#    'norm_deficit' →                                                  #
-#    'start_latency' -->                                               #
-#    'min_latency' -->                                                 #
-#    'max_latency' -->                                                 #
-########################################################################
-
-  x_var: 'distance' # 'distance','cap','snr','avg_latency', 'user_time', 'user_bw', 'deficit', 'norm_deficit', 'start_latency', 'min_latency', 'max_latency'
-  y_var: 'snr' # 'distance','cap','snr','avg_latency', 'use_time', 'user_bw', 'deficit', 'norm_deficit', 'start_latency', 'min_latency', 'max_latency'
-  title: 'Max Latency x  Distance'
-  xlabel: 'Distance (Km)'
+  x_var: 'distance' # 'distance','cap','snr','avg_latency'... (More parameters in the glossary)
+  y_var: 'min_latency' # 'distance','cap','snr','avg_latency' ... (More parameters in the glossary)
+  title: 'Cap x  SNR'
+  xlabel: 'Cap'
   ylabel: 'SNR (dB)'
   figsize: [10, 6]
   resolution: 300 # (100, 300 or 600)
   grid: True
   xlim: [0,25]
   ylim: [0,200]
-  auto_scale: 'False'  # ('True' or 'False')
-  graph_type: 'histplot' #('line', 'bar', 'boxplot', 'scatter' or 'histplot')
-  save_as: 'graph_maxlatency_distance.png'
+  auto_scale: True  # ('True' or 'False')
+  graph_type: 'scatter' #('line', 'bar', 'boxplot', 'scatter' or 'histplot')
+  save_as: 'graph_cap_snr.png'
 
-#########################################################################   End Graph Settings  #######################################################################################################################################
+                            ############################  Glossary #################################
+                            #    'distance' → Distance between the UE and its respective BS (Km)   #
+                            #    'cap' → Capacity (Mbps)                                           #
+                            #    'snr' → Signal-to-noise ratio (dB)                                #
+                            #    'avg_latency' → Average latency                                   #
+                            #    'user_time' → Time each UE was connected to its BS                #
+                            #    'user_bw' → Bandwidth used by each UE                             #
+                            #    'deficit' →                                                       #
+                            #    'norm_deficit' →                                                  #
+                            #    'start_latency' -->                                               #
+                            #    'min_latency' -->                                                 #
+                            #    'max_latency' -->                                                 #
+                            ########################################################################
+
+##################################################   End Graph Settings  ###############################################
+
+######################################################  Map Settings  ##################################################
+
 map:
-
-##############################################################################  Map Settings  #########################################################################################################################################
-
-  complete: False # True --> Draws the maps for all BSs and simulations based on the provided maximum and minimum values | False --> Draws the map for a single quantity of BSs or UEs (bs_ue_min) from a specific simulation (s_min)
+  complete: True # True --> * / False --> **
   title: 'Map of BSs and UEs'
   xlabel: 'Distance (Km)'
   ylabel: 'Distance (Km)'
@@ -70,6 +61,9 @@ map:
   auto_scale: 'False'  # ('True' or 'False')
   save_as: 'graph_teste.png'
 
-############################################################################   End Map Settings  #########################################################################################################################################
+# *  Draws the maps for all BSs and simulations based on the provided maximum and minimum values
+# ** Draws the map for a single quantity of BSs or UEs (bs_ue_min) from a specific simulation (s_min)
+
+#####################################################   End Map Settings  ##############################################
 
 

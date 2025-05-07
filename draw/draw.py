@@ -10,10 +10,10 @@ from plot_data import draw_map
 from scipy.interpolate import make_interp_spline
 import numpy as np
 
-print('Modify the config.yml file, keeping in mind that:\n')
-analyze_simulation_structure('/home/cristiano/PycharmProjects/Sama_simulator/output/04_15_25-19_00_41/04_15_25-19_00_41.pkl')
-print()
-press_any_key_to_continue()
+#print('Modify the config.yml file, keeping in mind that:\n')
+#analyze_simulation_structure('/home/cristiano/PycharmProjects/Sama_simulator/output/04_15_25-19_00_41/04_15_25-19_00_41.pkl')
+#print()
+#press_any_key_to_continue()
 
 
 #load the configuration file
