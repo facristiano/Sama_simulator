@@ -62,7 +62,7 @@ map:
   save_as: 'graph_teste.png'
 
 # *  Draws the maps for all BSs and simulations based on the provided maximum and minimum values
-# ** Draws the map for a single quantity of BSs or UEs (bs_ue_min) from a specific simulation (s_min)
+# ** Draws the maps for a single quantity of BSs or UEs (bs_ue_min) from a specific simulation (s_min)
 
 #####################################################   End Map Settings  ##############################################
 
