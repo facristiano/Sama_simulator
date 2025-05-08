@@ -7,7 +7,7 @@ general:
   bs_ue_max: 5 # Maximum number of BSs or UEs (If empty, only the minimum value will be used)
   bs_ue_step: 1 # Step size for BSs or UEs
   s_min: 5 # Minimum simulation number
-  s_max: 40 # Maximum simulation number (If empty, only the minimum value will be used)
+  s_max:  # Maximum simulation number (If empty, only the minimum value will be used)
   s_step: 5 # Step size for the simulation
   type_link: 'downlink_data' #('downlink_data' or 'uplink_data')
 
@@ -16,19 +16,20 @@ general:
 ####################################################  Graph Settings  ##################################################
 
 graph:
-  x_var: 'distance' # 'distance','cap','snr','avg_latency'... (More parameters in the glossary)
-  y_var: 'min_latency' # 'distance','cap','snr','avg_latency' ... (More parameters in the glossary)
+  x_var: 'snr' # 'distance','cap','snr','avg_latency'... (More parameters in the glossary)
+  y_var: 'snr' # 'distance','cap','snr','avg_latency' ... (More parameters in the glossary)
   title: 'Cap x  SNR'
   xlabel: 'Cap'
   ylabel: 'SNR (dB)'
   figsize: [10, 6]
   resolution: 300 # (100, 300 or 600)
   grid: True
-  xlim: [0,25]
-  ylim: [0,200]
-  auto_scale: True  # ('True' or 'False')
-  graph_type: 'scatter' #('line', 'bar', 'boxplot', 'scatter' or 'histplot')
-  save_as: 'graph_cap_snr.png'
+  xlim: [1,5]
+  ylim: [20,22]
+  auto_scale: 'False'  # ('True' or 'False')
+  media: 'True'
+  graph_type: 'line' #('line', 'bar', 'boxplot', 'scatter' or 'histplot')
+  save_as: 'linegraph_distance_snr.png'
 
                             ############################  Glossary #################################
                             #    'distance' → Distance between the UE and its respective BS (Km)   #
@@ -37,11 +38,11 @@ graph:
                             #    'avg_latency' → Average latency (ms)                              #
                             #    'user_time' → Time each UE was connected to its BS (ms)           #
                             #    'user_bw' → Bandwidth used by each UE (ms)                        #
-                            #    'deficit' →                                                       #
-                            #    'norm_deficit' →                                                  #
-                            #    'start_latency' -->                                               #
-                            #    'min_latency' -->                                                 #
-                            #    'max_latency' -->                                                 #
+                            #    'deficit' → Capacity required to achieve target capacity (Mbps)   #
+                            #    'norm_deficit' → Capacity deficit averages (Mbps)                 #
+                            #    'start_latency' --> First message exchange between UE and BS (ms) #
+                            #    'min_latency' --> Minimum latency (ms)                            #
+                            #    'max_latency' --> Maximum latency (ms)                            #
                             ########################################################################
 
 ##################################################   End Graph Settings  ###############################################
