@@ -40,9 +40,9 @@ graph:
                             #    'user_bw' → Bandwidth used by each UE (ms)                        #
                             #    'deficit' → Capacity required to achieve target capacity (Mbps)   #
                             #    'norm_deficit' → Capacity deficit averages (Mbps)                 #
-                            #    'start_latency' --> First message exchange between UE and BS (ms) #
-                            #    'min_latency' --> Minimum latency (ms)                            #
-                            #    'max_latency' --> Maximum latency (ms)                            #
+                            #    'start_latency' →  First message exchange between UE and BS (ms)  #
+                            #    'min_latency' → Minimum latency (ms)                              #
+                            #    'max_latency' → Maximum latency (ms)                              #
                             ########################################################################
 
 ##################################################   End Graph Settings  ###############################################
