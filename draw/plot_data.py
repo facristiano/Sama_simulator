@@ -24,17 +24,15 @@ def customize_graph (title=None, xlabel=None, ylabel=None, auto_scale=True, xlim
 
 # save de graph
 def save_graph(complete=None, save_as=None, time=None):
-
-    output_dir = os.path.join("graphics", time)
-    os.makedirs(output_dir, exist_ok=True)
-    save_path = os.path.join(output_dir, save_as)
-
     if complete == False:
         plt.show()
         print('2) Your graph is ready!')
         s = input("3) Do you want to save(y/n)?:")
         match s:
             case "y":
+                output_dir = os.path.join("graphics", time)
+                os.makedirs(output_dir, exist_ok=True)
+                save_path = os.path.join(output_dir, save_as)
                 plt.savefig(save_path)
             case "n":
                 print("4) Make the desired changes to config.yml!")
@@ -85,12 +83,44 @@ def draw_map (uex_data, uey_data, bsx_data, bsy_data,uex_off_data, uey_off_data,
                 customize_graph(title, xlabel, ylabel, auto_scale, xlim, ylim, figsize, resolution, grid)
                 test = len(uex_off_data)
                 if test != 0:
-                    fig = sns.scatterplot(x=uex_off_data, y=uey_off_data, marker='o', size=uex_off_data,sizes=(10,10), color='black', legend=False)
+                     sns.scatterplot(x=uex_off_data, y=uey_off_data, marker='o', size=uex_off_data,sizes=(10,10), color='black', legend=False)
                 else:
                      {}
-                fig = sns.scatterplot(x=bsx_data, y=bsy_data, hue=bs_index_data, marker='^', size=bsx_data, sizes=(200,200),legend=False, palette="rainbow")
-                fig = sns.scatterplot(x=uex_data, y=uey_data,hue=bs_index_data, marker='o',size=uex_data,sizes=(10,10),legend=False, palette="rainbow")
-                save_graph(complete,save_as, time)
+                sns.scatterplot(x=bsx_data, y=bsy_data, hue=bs_index_data, marker='^', size=bsx_data, sizes=(200,200),legend=False, palette="rainbow")
+                sns.scatterplot(x=uex_data, y=uey_data,hue=bs_index_data, marker='o',size=uex_data,sizes=(10,10),legend=False, palette="rainbow")
+
+                if complete == False:
+                    buf = io.BytesIO()
+                    plt.savefig(buf, format='png')
+                    buf.seek(0)
+                    plt.close()
+                    imagem1 = Image.open(buf)
+                    imagem1.show()
+                    print("2) Your map is ready!")
+                    s = input("3) Do you want to save(y/n)?:")
+                    match s:
+                        case 'y':
+                            output_dir = os.path.join("graphics", time)
+                            os.makedirs(output_dir, exist_ok=True)
+                            save_path = os.path.join(output_dir, save_as)
+                            imagem1.save(save_path)
+                        case 'n':
+                            print("4) Make the desired changes to config.yml!")
+                        case _:
+                            print("Value not accepted!")
+                elif complete == True:
+                    output_dir = os.path.join("graphics", time)
+                    os.makedirs(output_dir, exist_ok=True)
+                    save_path = os.path.join(output_dir, save_as)
+                    buf = io.BytesIO()
+                    plt.savefig(buf, format='png')
+                    buf.seek(0)
+                    plt.close()
+                    imagem1 = Image.open(buf)
+                    imagem1.save(save_path)
+
+                else:
+                    print("True or False!")
 
                 return ()
 

@@ -5,16 +5,11 @@ import os, sys
 from datetime import datetime
 from PIL import Image
 import pandas as pd
-from load_data import load_config, load_raw_data, load_xy_data, load_position_data, load_distance_data, load_data, analyze_simulation_structure, press_any_key_to_continue, create_list
+from load_data import load_config, load_raw_data, load_xy_data, load_position_data, load_distance_data, load_data, create_list, load_media_data
 from plot_data import draw_map
 from scipy.interpolate import make_interp_spline
 import numpy as np
-
-#print('Modify the config.yml file, keeping in mind that:\n')
-#analyze_simulation_structure('/home/cristiano/PycharmProjects/Sama_simulator/output/04_15_25-19_00_41/04_15_25-19_00_41.pkl')
-#print()
-#press_any_key_to_continue()
-
+import csv
 
 #load the configuration file
 config = load_config('config.yml')
@@ -25,6 +20,10 @@ raw_data = load_raw_data (config['general']['file'], config['general']['type_lin
 #load simulation_list and bs_ue_list
 simulation_list = create_list(config['general']['s_min'], config['general']['s_max'], config['general']['s_step'])
 bs_ue_list = create_list(config['general']['bs_ue_min'], config['general']['bs_ue_max'], config['general']['bs_ue_step'])
+
+#carrega médias por BS
+media = load_media_data(config['graph']['y_var'], bs_ue_list, simulation_list, raw_data)
+media['bs'] += 1
 
 time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
@@ -66,9 +65,9 @@ if config['general']['make'] == 'graph':
                 x_smooth = np.linspace(data_long["x"].min(), data_long["x"].max(), 500)  # Mais pontos para suavização
                 spl = make_interp_spline(data_long["x"], data_long["y"], k=1)  # k=3 para spline cúbica
                 y_smooth = spl(x_smooth)
-                print(data_long)
                 sns.lineplot(data=data_long, x='x', y='y', color="blue")
-                #sns.regplot(data=data_long, x="x", y="y", order=5, ci=None, color="blue", scatter=False)
+            elif config['graph']['media'] == 'True':
+                sns.lineplot(data=media, x='bs', y=f'media por simulação (axis)', color="blue")
             else:
                 fig = sns.lineplot(x=x_data, y=y_data)
         case 'boxplot':
@@ -93,9 +92,19 @@ if config['general']['make'] == 'graph':
         case "y":
             output_dir = os.path.join("graphics", time)
             os.makedirs(output_dir, exist_ok=True)
-            save_path = os.path.join(output_dir, config['graph']['save_as'])
+            save_path = os.path.join(output_dir, config['graph']['save_as'] + '.png')
+            save_path_csv = os.path.join(output_dir, config['graph']['save_as'] + '.csv')
+
+            # salva arquivo .csv
+            with open(save_path_csv, mode='w', newline='') as arquivo_csv:
+                escritor = csv.writer(arquivo_csv)
+                escritor.writerow([config['graph']['x_var'], config['graph']['y_var']])
+                for x, y in zip(x_data, y_data):
+                    escritor.writerow([x, y])
+
             imagem1.save(save_path)
             print("4) Graphic saved as " + str(config['graph']['save_as']) + "!")
+
         case _:
             print ("4) Make the desired changes to config.yml!")
 

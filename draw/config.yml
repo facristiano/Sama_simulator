@@ -2,13 +2,13 @@
 
 general:
   file: '/home/cristiano/Downloads/08_08_2024-02_18_27.pkl' # (path of the .pkl file)
-  make: 'graph' # 'map' --> draw map | 'graph' --> draw graph
+  make: 'map' # 'map' --> draw map | 'graph' --> draw graph
   bs_ue_min: 1 # Minimum number of BSs or UEs
-  bs_ue_max: 5 # Maximum number of BSs or UEs (If empty, only the minimum value will be used)
+  bs_ue_max: 10 # Maximum number of BSs or UEs (If empty, only the minimum value will be used)
   bs_ue_step: 1 # Step size for BSs or UEs
   s_min: 5 # Minimum simulation number
-  s_max:  # Maximum simulation number (If empty, only the minimum value will be used)
-  s_step: 5 # Step size for the simulation
+  s_max: 50 # Maximum simulation number (If empty, only the minimum value will be used)
+  s_step: 1 # Step size for the simulation
   type_link: 'downlink_data' #('downlink_data' or 'uplink_data')
 
 #################################################  End General Settings  ###############################################
@@ -16,20 +16,20 @@ general:
 ####################################################  Graph Settings  ##################################################
 
 graph:
-  x_var: 'snr' # 'distance','cap','snr','avg_latency'... (More parameters in the glossary)
+  x_var: 'distance' # 'distance','cap','snr','avg_latency'... (More parameters in the glossary)
   y_var: 'snr' # 'distance','cap','snr','avg_latency' ... (More parameters in the glossary)
-  title: 'Cap x  SNR'
-  xlabel: 'Cap'
+  title: 'SNR x distance'
+  xlabel: 'Distance (Km)'
   ylabel: 'SNR (dB)'
   figsize: [10, 6]
   resolution: 300 # (100, 300 or 600)
   grid: True
   xlim: [1,5]
   ylim: [20,22]
-  auto_scale: 'False'  # ('True' or 'False')
-  media: 'True'
-  graph_type: 'line' #('line', 'bar', 'boxplot', 'scatter' or 'histplot')
-  save_as: 'linegraph_distance_snr.png'
+  auto_scale: 'True'  # ('True' or 'False')
+  media: 'False'
+  graph_type: 'scatter' #('line', 'bar', 'boxplot', 'scatter' or 'histplot')
+  save_as: 'scatter_distance_snr'
 
                             ############################  Glossary #################################
                             #    'distance' → Distance between the UE and its respective BS (Km)   #
@@ -55,7 +55,7 @@ map:
   xlabel: 'Distance (Km)'
   ylabel: 'Distance (Km)'
   figsize: [10, 6]
-  resolution: 100 # (100, 300 or 600)
+  resolution: 300 # (100, 300 or 600)
   grid: False
   xlim: [0,30]
   ylim: [0,30]

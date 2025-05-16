@@ -3,6 +3,7 @@ import pickle
 import math
 import yaml
 import os
+import pandas as pd
 
 #load the cofiguration file
 def load_config(arquivo_yaml):
@@ -131,70 +132,15 @@ def load_position_data(n_bs=None, n_s =None, raw_data=None):
 
     return uex_data, uey_data, bsx_data, bsy_data,uex_off_data, uey_off_data, bs_index_data
 
+def load_media_data(axis=None, bs_ue_list=None, simulation_list=None, raw_data=None):
+    data = []
+    for bs in bs_ue_list:
+        for sim in simulation_list:
+            media = np.mean(raw_data[bs][sim][axis])
+            data.append({'bs': bs, f'media por simulação (axis)': media})
 
+    df = pd.DataFrame(data)
 
-def analyze_simulation_structure(file_path):
-    """
-    Analyzes the structure of a simulation .pkl file and determines:
-    - The number of UEs or BSs (based on variation).
-    - The number of simulations.
-    
-    :param file_path: Path to the .pkl file.
-    """
-    try:
-        # Load the pickle file
-        with open(file_path, 'rb') as file:
-            data = pickle.load(file)
+    return df
 
-        # Initialize variables
-        num_ues = 0
-        num_bss = 0
-        num_simulations = 0
-
-        # Check if 'downlink_data' exists and contains the relevant information
-        if isinstance(data, list) and len(data) > 0 and isinstance(data[0], dict):
-            downlink_data = data[0].get("downlink_data", {})
-            if isinstance(downlink_data, dict):
-                # Get BSs and UEs list
-                ues = downlink_data.get("UEs", [])
-                bss = downlink_data.get("BSs", [])
-                
-                # Store number of UEs and BSs
-                num_ues = len(ues)
-                num_bss = len(bss)
-                
-                # Get number of simulations from raw_data list
-                raw_data = downlink_data.get("raw_data", [])
-                # Assuming raw_data[0] contains the simulation count
-                num_simulations = len(raw_data[0]) if raw_data else 0
-
-        # Check if BSs or UEs have varying quantities
-        if num_bss > 1:  # If BSs vary
-            variation_type = "BSs"
-            variation_quantity = num_bss
-        elif num_ues > 1:  # If UEs vary
-            variation_type = "UEs"
-            variation_quantity = num_ues
-        else:
-            variation_type = "None"
-            variation_quantity = 0
-
-        # Print results
-        print(f"Variation Type: {variation_type}")
-        print(f"Variation Quantity: {variation_quantity}")
-        print(f"Number of Simulations: {num_simulations}")
-
-    except Exception as e:
-        print(f"Error processing the .pkl file: {e}")
-
-# Example usage
-# analyze_simulation_structure('path_to_simulation.pkl')
-
-def press_any_key_to_continue():
-    import sys
-    option = input("Press Y to continue or N to stop (and redo the config file):\n")
-    if option == 'N' or option == 'n':
-        sys.exit()
-    elif option != 'Y' and option != 'y':
-        press_any_key_to_continue()
 
