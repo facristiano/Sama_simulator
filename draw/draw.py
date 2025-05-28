@@ -5,6 +5,9 @@ import os, sys
 from datetime import datetime
 from PIL import Image
 import pandas as pd
+from matplotlib.lines import lineStyles
+from numpy.ma.core import minimum
+
 from load_data import load_config, load_raw_data, load_xy_data, load_position_data, load_distance_data, load_data, create_list, load_media_data
 from plot_data import draw_map
 from scipy.interpolate import make_interp_spline
@@ -23,7 +26,11 @@ bs_ue_list = create_list(config['general']['bs_ue_min'], config['general']['bs_u
 
 #carrega médias por BS
 media = load_media_data(config['graph']['y_var'], bs_ue_list, simulation_list, raw_data)
+media = media.rename(columns={'media por simulação (axis)': 'media'})
+media['bs'] = media['bs'].astype(float)
 media['bs'] += 1
+
+#sns.lineplot(media, 'bs', 'media por simulação (axis)')
 
 time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
@@ -59,7 +66,7 @@ if config['general']['make'] == 'graph':
         case 'scatter':
             fig =  sns.scatterplot(x=x_data, y=y_data, color='purple', size=y_data, sizes=(1,1), legend=False)
         case 'line':
-            if config['graph']['x_var'] == 'distance' or config['graph']['y_var'] == 'distance':
+            if (config['graph']['x_var'] == 'distance' or config['graph']['y_var'] == 'distance') and  config['graph']['media'] == 'False' :
                 data_long = pd.DataFrame({"x": x_data, "y": y_data})
                 data_long = data_long.sort_values(by="x").groupby("x", as_index=False).mean()
                 x_smooth = np.linspace(data_long["x"].min(), data_long["x"].max(), 500)  # Mais pontos para suavização
@@ -67,7 +74,17 @@ if config['general']['make'] == 'graph':
                 y_smooth = spl(x_smooth)
                 sns.lineplot(data=data_long, x='x', y='y', color="blue")
             elif config['graph']['media'] == 'True':
-                sns.lineplot(data=media, x='bs', y=f'media por simulação (axis)', color="blue")
+                plt.figure(dpi=300)
+                sns.lineplot(data=media, x='bs', y='media', errorbar='sd', marker='o', linestyle="--", color='blue')
+                plt.xlim(left=media['bs'].min())
+                plt.ylim(bottom=media['media'].min())
+                plt.xticks(sorted(media['bs'].unique()))
+                plt.xlim(right=media['bs'].max())
+                plt.xlabel("Número de BSs", size=14)
+                plt.ylabel("SNR (dB)", size=14)
+                plt.title("SNR x Número de BSs", size=16)
+                plt.grid(True)
+                plt.tight_layout()
             else:
                 fig = sns.lineplot(x=x_data, y=y_data)
         case 'boxplot':
@@ -125,5 +142,79 @@ elif config['general']['make'] == 'map':
     else:
         print('Complete just be True or False!')
 
+elif config['general']['make'] == 'grid':
+
+    x_labels = config['grid']["x_labels"]
+    y_labels = config['grid']["y_labels"]
+    folders_matrix = config['grid']["folders_matrix"]
+
+    n_lines, n_cols = len(y_labels), len(x_labels)
+
+
+    # Cria os subplots
+    fig, axes = plt.subplots(n_lines, n_cols, figsize=(5 * n_cols, 4 * n_lines), sharex=True, sharey=True, dpi=300)
+    fig.suptitle("Distância x SNR", fontsize=16)
+
+
+    # Função para encontrar o único CSV dentro de uma pasta
+    def find_csv_in_folder(folder_path):
+        files = [f for f in os.listdir(folder_path) if f.endswith(".csv")]
+        assert len(files) == 1, f"Esperado 1 CSV em {folder_path}, mas encontrei {len(files)}."
+        return os.path.join(folder_path, files[0])
+
+
+    # Loop principal
+    for i in range(n_lines):
+        for j in range(n_cols):
+            folder = '/home/cristiano/PycharmProjects/Sama_simulator/draw/graphics/'+ folders_matrix[i][j]
+            csv_path = find_csv_in_folder(folder)
+            df = pd.read_csv(csv_path)
+
+            ax = axes[i, j]
+            ax.set_xlabel("Distância (km)")
+            ax.xaxis.set_tick_params(labelbottom=True, size=16)
+
+            ax.set_ylabel("SNR (dB)")
+            ax.yaxis.set_tick_params(labelleft=True, size=16)
+
+
+            ax.scatter(df['distance'], df['snr'], alpha=0.1, s=1, color="purple")
+
+
+            # Força os eixos a começarem no zero
+            ax.set_xlim(left=0)
+            ax.set_ylim(bottom=0)
+
+            # Ativa o grid
+            ax.grid(True, linestyle='-', alpha=0.5)
+
+            if i == n_lines - 1:
+                ax.annotate(x_labels[j], xy=(0.5, -0.3), xycoords='axes fraction', ha='center', fontsize=12)
+            if j == n_cols - 1:
+                ax.annotate(y_labels[i], xy=(1.02, 0.5), xycoords='axes fraction', rotation=270, va='center', fontsize=12)
+
+
+    plt.subplots_adjust(hspace=0.4)
+    plt.tight_layout()
+    # save the graph
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', dpi=300)
+    buf.seek(0)
+    plt.close()
+    imagem1 = Image.open(buf)
+    imagem1.show()
+    print('2) Your facet grid is ready!')
+    s = input("3) Do you want to save your facet grid(y/n)?:")
+    match s:
+        case "y":
+            output_dir = os.path.join("graphics", time)
+            os.makedirs(output_dir, exist_ok=True)
+            save_path = os.path.join(output_dir, config['graph']['save_as'] + '.png')
+
+            imagem1.save(save_path)
+            print("4) Graphic saved as " + str(config['graph']['save_as']) + "!")
+
+        case _:
+            print("4) Make the desired changes to config.yml!")
 else:
     print("The variable make just be 'map' or 'graph'!")

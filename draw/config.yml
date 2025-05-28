@@ -2,9 +2,9 @@
 
 general:
   file: '/home/cristiano/Downloads/08_08_2024-02_18_27.pkl' # (path of the .pkl file)
-  make: 'map' # 'map' --> draw map | 'graph' --> draw graph
+  make: 'graph' # 'map' --> draw map | 'graph' --> draw graph | 'grid' --> draw facet grit
   bs_ue_min: 1 # Minimum number of BSs or UEs
-  bs_ue_max: 10 # Maximum number of BSs or UEs (If empty, only the minimum value will be used)
+  bs_ue_max: 20 # Maximum number of BSs or UEs (If empty, only the minimum value will be used)
   bs_ue_step: 1 # Step size for BSs or UEs
   s_min: 5 # Minimum simulation number
   s_max: 50 # Maximum simulation number (If empty, only the minimum value will be used)
@@ -18,7 +18,7 @@ general:
 graph:
   x_var: 'distance' # 'distance','cap','snr','avg_latency'... (More parameters in the glossary)
   y_var: 'snr' # 'distance','cap','snr','avg_latency' ... (More parameters in the glossary)
-  title: 'SNR x distance'
+  title: 'SNR x Distance'
   xlabel: 'Distance (Km)'
   ylabel: 'SNR (dB)'
   figsize: [10, 6]
@@ -27,8 +27,8 @@ graph:
   xlim: [1,5]
   ylim: [20,22]
   auto_scale: 'True'  # ('True' or 'False')
-  media: 'False'
-  graph_type: 'scatter' #('line', 'bar', 'boxplot', 'scatter' or 'histplot')
+  media: 'True'
+  graph_type: 'line' #('line', 'bar', 'boxplot', 'scatter' or 'histplot')
   save_as: 'scatter_distance_snr'
 
                             ############################  Glossary #################################
@@ -47,7 +47,7 @@ graph:
 
 ##################################################   End Graph Settings  ###############################################
 
-######################################################  Map Settings  ##################################################
+#####################################################  Map Settings  ###################################################
 
 map:
   complete: True # True --> * / False --> **
@@ -65,6 +65,19 @@ map:
 # *  Draws the maps for all BSs and simulations based on the provided maximum and minimum values
 # ** Draws the maps for a single quantity of BSs or UEs (bs_ue_min) from a specific simulation (s_min)
 
-#####################################################   End Map Settings  ##############################################
+#################################################   End Map Settings  ##################################################
+
+################################################  Facet Grid Settings  #################################################
+grid:
+  folders_matrix:
+                  - ["2025-05-27_13-51-30", "2025-05-27_13-52-14", "2025-05-27_13-52-30"]
+                  - ["2025-05-27_13-52-43", "2025-05-27_13-52-54", "2025-05-27_13-53-04"]
+                  - ["2025-05-27_13-53-14", "2025-05-27_13-53-25", "2025-05-27_13-53-36"]
+
+
+  x_labels: [ "5 BSs", "10 BSs", '15 Bss']
+  y_labels: [ "Round-Robin", "Best CQI", "Proportional-fair"]
+
+#############################################  End Facet Grid Settings  ################################################
 
 
